@@ -1,15 +1,10 @@
 package com.thonwelling.fooddelivery.repositories;
 
 import com.thonwelling.fooddelivery.models.Kitchen;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.UUID;
 
-@Component
-public interface KitchenRepository {
-  List<Kitchen> listKitchen();
-  Kitchen getKitchenById(UUID id);
-  Kitchen saveKitchen(Kitchen kitchen);
-  void deleteKitchen(UUID id);
-}
+@Repository
+public interface KitchenRepository extends JpaRepository<Kitchen, UUID> {}
