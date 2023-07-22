@@ -1,8 +1,12 @@
 package com.thonwelling.fooddelivery.services;
 
+import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
+import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
+import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +19,8 @@ import java.util.UUID;
 public class RestaurantService {
   @Autowired
   RestaurantRepository restaurantRepository;
+  @Autowired
+  KitchenRepository kitchenRepository;
 
   public List<Restaurant> listRestaurants(){
     return restaurantRepository.findAll();
@@ -22,5 +28,15 @@ public class RestaurantService {
 
   public ResponseEntity<Restaurant> getRestaurantById(@PathVariable UUID id){
     return restaurantRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+  public ResponseEntity<Restaurant> addRestraurant(Restaurant restaurant){
+    UUID kitchenId = restaurant.getKitchen().getId();
+    Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
+
+    if (kitchen.isEmpty()){
+      throw new NotFoundEntityException("The Kitchen With Code " + kitchenId + " Does Not Exist!!");
+    }
+    restaurant.setKitchen(kitchen.get());
+    return ResponseEntity.status(HttpStatus.CREATED).body(restaurantRepository.save(restaurant));
   }
 }

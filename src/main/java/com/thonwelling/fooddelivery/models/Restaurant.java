@@ -26,7 +26,7 @@ public class Restaurant implements Serializable {
   private Double deliveryRate;
 
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "kitchen_id")
+  @JoinColumn(name = "kitchen_id", nullable = false)
   private Kitchen kitchen;
 
   @Override
