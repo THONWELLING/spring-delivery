@@ -1,8 +1,10 @@
 package com.thonwelling.fooddelivery.controllers;
 
 import com.thonwelling.fooddelivery.models.Restaurant;
+import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
 import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.services.RestaurantService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +21,8 @@ public class RestaurantController {
 
   @Autowired
   RestaurantService restaurantService;
+  @Autowired
+  private RestaurantRepository restaurantRepository;
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<Restaurant>> listRestaurants (){
@@ -40,5 +45,18 @@ public class RestaurantController {
     }
   }
 
-
+  @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public ResponseEntity<?> updateRestaurant(@PathVariable UUID id , @RequestBody Restaurant restaurant) {
+    try {
+      Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+      if (restaurantOptional.isPresent()) {
+        Restaurant restaurantFounded = restaurantOptional.get();
+        BeanUtils.copyProperties(restaurant, restaurantFounded, "id");
+        return ResponseEntity.ok(restaurantService.addRestaurant(restaurantFounded));
+      }
+      return ResponseEntity.notFound().build();
+    } catch (NotFoundEntityException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+  }
 }
