@@ -1,6 +1,7 @@
 package com.thonwelling.fooddelivery.controllers;
 
 import com.thonwelling.fooddelivery.models.Restaurant;
+import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.services.RestaurantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,8 +30,15 @@ public class RestaurantController {
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  @ResponseStatus(HttpStatus.CREATED)
-  public ResponseEntity<Restaurant> addRestaurant(@RequestBody Restaurant restaurant) {
-    return restaurantService.addRestraurant(restaurant);
+  public ResponseEntity<?> addRestaurant(@RequestBody Restaurant restaurant) {
+    try {
+      restaurant = restaurantService.addRestaurant(restaurant).getBody();
+      return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);
+
+    } catch (NotFoundEntityException e) {
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
   }
+
+
 }

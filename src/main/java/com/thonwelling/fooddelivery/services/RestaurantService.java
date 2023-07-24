@@ -26,15 +26,15 @@ public class RestaurantService {
     return restaurantRepository.findAll();
   }
 
-  public ResponseEntity<Restaurant> getRestaurantById(@PathVariable UUID id){
+  public ResponseEntity<Restaurant>  getRestaurantById(@PathVariable UUID id){
     return restaurantRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
-  public ResponseEntity<Restaurant> addRestraurant(Restaurant restaurant){
+  public ResponseEntity<Restaurant> addRestaurant(Restaurant restaurant){
     UUID kitchenId = restaurant.getKitchen().getId();
     Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
 
     if (kitchen.isEmpty()){
-      throw new NotFoundEntityException("The Kitchen With Code " + kitchenId + " Does Not Exist!!");
+      throw new NotFoundEntityException("The__Kitchen__With __Code->__ " + kitchenId + " __Does__ Not__ Exist!!");
     }
     restaurant.setKitchen(kitchen.get());
     return ResponseEntity.status(HttpStatus.CREATED).body(restaurantRepository.save(restaurant));
