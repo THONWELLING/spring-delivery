@@ -16,6 +16,10 @@ public class KitchenService {
   @Autowired
   KitchenRepository kitchenRepository;
 
+
+  public ResponseEntity<Kitchen> getKitchenById(@PathVariable UUID id) {
+    return kitchenRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
   public Kitchen addKitchen(Kitchen kitchen) {
     return kitchenRepository.save(kitchen);
   }
@@ -25,7 +29,4 @@ public class KitchenService {
     kitchenRepository.deleteById(id);
   }
 
-  public ResponseEntity<Kitchen> getKitchenById(@PathVariable UUID id) {
-    return kitchenRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
-  }
 }

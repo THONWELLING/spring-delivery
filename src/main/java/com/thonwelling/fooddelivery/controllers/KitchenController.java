@@ -1,7 +1,7 @@
 package com.thonwelling.fooddelivery.controllers;
 
-import com.thonwelling.fooddelivery.repositories.exceptions.InUseEntityException;
-import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.InUseEntityException;
+import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.services.KitchenService;

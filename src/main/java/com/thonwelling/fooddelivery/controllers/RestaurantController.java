@@ -2,7 +2,7 @@ package com.thonwelling.fooddelivery.controllers;
 
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
-import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.services.RestaurantService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

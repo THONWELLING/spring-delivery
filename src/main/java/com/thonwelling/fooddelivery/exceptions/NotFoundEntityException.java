@@ -1,4 +1,4 @@
-package com.thonwelling.fooddelivery.repositories.exceptions;
+package com.thonwelling.fooddelivery.exceptions;
 
 import java.io.Serial;
 

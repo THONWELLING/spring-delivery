@@ -4,7 +4,7 @@ import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
-import com.thonwelling.fooddelivery.repositories.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
