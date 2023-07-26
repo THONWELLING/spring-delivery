@@ -26,19 +26,15 @@ public class State implements Serializable {
   @Column(nullable = false)
   private String name;
 
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinColumn(name = "city_id", nullable = false)
-  private City city;
-
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof State state)) return false;
-    return Objects.equals(getId(), state.getId()) && Objects.equals(getName(), state.getName()) && Objects.equals(getCity(), state.getCity());
+    return Objects.equals(getId(), state.getId()) && Objects.equals(getName(), state.getName());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getCity());
+    return Objects.hash(getId(), getName());
   }
 }
