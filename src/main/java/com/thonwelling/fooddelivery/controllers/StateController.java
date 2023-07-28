@@ -27,7 +27,7 @@ public class StateController {
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<State>> listStates (){
-    return ResponseEntity.status(HttpStatus.OK).body(stateService.listCities());
+    return ResponseEntity.status(HttpStatus.OK).body(stateService.listStates());
   }
 
   @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -39,9 +39,9 @@ public class StateController {
   public ResponseEntity<?> addCity(@RequestBody State state ) {
     try{
       state = stateService.addState(state);
-      return ResponseEntity.status(HttpStatus.CREATED).body(state);
+        return ResponseEntity.status(HttpStatus.CREATED).body(state);
     } catch (NotFoundEntityException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 

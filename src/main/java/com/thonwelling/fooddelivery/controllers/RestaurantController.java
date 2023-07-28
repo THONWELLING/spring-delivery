@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -46,7 +47,7 @@ public class RestaurantController {
   }
 
   @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<?> updateRestaurant(@PathVariable UUID id , @RequestBody Restaurant restaurant) {
+  public ResponseEntity<?> updateRestaurant(@PathVariable UUID id , @RequestBody Optional<Restaurant> restaurant) {
     try {
       Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
       if (restaurantOptional.isPresent()) {
@@ -58,5 +59,25 @@ public class RestaurantController {
     } catch (NotFoundEntityException e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<?> updateRestaurantParcial (@PathVariable UUID id , Map<String, Object> fields) {
+    Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
+    if (restaurantOptional.isPresent()) {
+      Restaurant restaurant = restaurantOptional.get();
+      merge(fields, restaurant);
+      restaurantRepository.save(restaurant);
+      return ResponseEntity.ok().build();
+    } else {
+       return ResponseEntity.notFound().build();
+    }
+
+  }
+
+  private static void merge(Map<String, Object> originFields, Restaurant restaurantDestiny) {
+    originFields.forEach((propertyName, propertyValue) -> {
+      System.out.println(propertyName + " = " + propertyValue);
+    });
   }
 }

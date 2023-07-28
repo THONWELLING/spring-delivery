@@ -20,7 +20,7 @@ public class StateService {
   @Autowired
   StateRepository stateRepository;
 
-  public List<State> listCities() {
+  public List<State> listStates() {
     return stateRepository.findAll();
   }
 
