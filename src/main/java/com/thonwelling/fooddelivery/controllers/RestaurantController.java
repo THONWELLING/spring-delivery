@@ -1,5 +1,6 @@
 package com.thonwelling.fooddelivery.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
@@ -9,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,7 +26,7 @@ public class RestaurantController {
   @Autowired
   RestaurantService restaurantService;
   @Autowired
-  private RestaurantRepository restaurantRepository;
+  RestaurantRepository restaurantRepository;
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<Restaurant>> listRestaurants (){
@@ -53,31 +56,44 @@ public class RestaurantController {
       if (restaurantOptional.isPresent()) {
         Restaurant restaurantFounded = restaurantOptional.get();
         BeanUtils.copyProperties(restaurant, restaurantFounded, "id");
-        return ResponseEntity.ok(restaurantService.addRestaurant(restaurantFounded));
+        return restaurantService.addRestaurant(restaurantFounded);
       }
-      return ResponseEntity.notFound().build();
+        return ResponseEntity.notFound().build();
     } catch (NotFoundEntityException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> updateRestaurantParcial (@PathVariable UUID id , Map<String, Object> fields) {
+  public ResponseEntity<?> updateRestaurantParcial(@PathVariable UUID id, @RequestBody Map<String, Object> fields) {
     Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
     if (restaurantOptional.isPresent()) {
       Restaurant restaurant = restaurantOptional.get();
-      merge(fields, restaurant);
-      restaurantRepository.save(restaurant);
-      return ResponseEntity.ok().build();
-    } else {
-       return ResponseEntity.notFound().build();
-    }
 
+      merge(fields, restaurant);
+
+      try {
+        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
+        return ResponseEntity.ok(updatedRestaurant);
+      } catch (NotFoundEntityException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
+      }
+    } else {
+      return ResponseEntity.notFound().build();
+    }
   }
 
-  private static void merge(Map<String, Object> originFields, Restaurant restaurantDestiny) {
+  private void merge(Map<String, Object> originFields, Restaurant restaurantDestiny) {
+    ObjectMapper objectMapper = new ObjectMapper();
+    Restaurant restaurantOrigin = objectMapper.convertValue(originFields, Restaurant.class);
+
+    // No loop abaixo, atribuímos os valores dos campos atualizados do restaurantOrigin para o restaurantDestiny
     originFields.forEach((propertyName, propertyValue) -> {
-      System.out.println(propertyName + " = " + propertyValue);
+      Field field = ReflectionUtils.findField(Restaurant.class, propertyName);
+      field.setAccessible(true);
+
+      Object newValue = ReflectionUtils.getField(field, restaurantOrigin);
+      ReflectionUtils.setField(field, restaurantDestiny, newValue);
     });
   }
 }

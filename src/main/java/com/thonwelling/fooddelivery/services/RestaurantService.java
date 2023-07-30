@@ -29,6 +29,7 @@ public class RestaurantService {
   public ResponseEntity<Restaurant>  getRestaurantById(@PathVariable UUID id){
     return restaurantRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
+
   public ResponseEntity<Restaurant> addRestaurant(Restaurant restaurant){
     UUID kitchenId = restaurant.getKitchen().getId();
     Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
