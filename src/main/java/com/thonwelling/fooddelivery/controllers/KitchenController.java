@@ -33,6 +33,12 @@ public class KitchenController {
     return service.getKitchenById(id);
   }
 
+  @GetMapping(value = "/name", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public List<Kitchen>  findKitchenByName(String name) {
+    return repository.findByName(name);
+  }
+
+
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
   public Kitchen addKitchen(@RequestBody Kitchen kitchen) {
@@ -58,7 +64,7 @@ public class KitchenController {
     } catch (NotFoundEntityException e ){
         return ResponseEntity.notFound().build();
     }catch (InUseEntityException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
   }
 }

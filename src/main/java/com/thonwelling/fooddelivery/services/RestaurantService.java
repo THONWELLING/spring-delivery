@@ -35,7 +35,9 @@ public class RestaurantService {
     Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
 
     if (kitchen.isEmpty()){
-      throw new NotFoundEntityException("The__Kitchen__With __Code->__ " + kitchenId + " __Does__ Not__ Exist!!");
+      throw new NotFoundEntityException(
+          String.format("The Kitchen With Code %s Does Not Exists!!", kitchenId)
+      );
     }
     restaurant.setKitchen(kitchen.get());
     return ResponseEntity.status(HttpStatus.CREATED).body(restaurantRepository.save(restaurant));
