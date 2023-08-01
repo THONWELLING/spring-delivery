@@ -35,7 +35,7 @@ public class KitchenController {
 
   @GetMapping(value = "/name", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public List<Kitchen>  findKitchenByName(String name) {
-    return repository.findByName(name);
+    return repository.findByNameContaining(name);
   }
 
 

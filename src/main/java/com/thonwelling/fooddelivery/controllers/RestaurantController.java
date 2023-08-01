@@ -14,6 +14,7 @@ import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,6 +37,20 @@ public class RestaurantController {
   @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<Restaurant> getRestaurantById(@PathVariable UUID id){
     return restaurantService.getRestaurantById(id);
+  }
+
+  @GetMapping(value = "/deliveryRate", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public List<Restaurant> getRestaurantByDeliveryRate(BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate){
+    return restaurantService.getRestaurantByDeliveryRate(lowerDeliveryRate, higherDeliveryRate);
+  }
+
+  @GetMapping(value = "/name-and-id", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public List<Restaurant> getRestaurantByNameAndKitchenId(String name, UUID kitchenId){
+    return restaurantService.getRestaurantByNameAndKitchenId(name, kitchenId);
+  }
+  @GetMapping(value = "/first-by-name", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public Optional<Restaurant> findFirstRestaurantByNameContaining(String name){
+    return restaurantService.findFirstRestaurantByNameContaining(name);
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

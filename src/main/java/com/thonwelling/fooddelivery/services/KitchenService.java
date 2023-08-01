@@ -28,7 +28,7 @@ public class KitchenService {
   }
 
   public List<Kitchen> getKitchenByName (String name) {
-    return kitchenRepository.findByName(name);
+    return kitchenRepository.findByNameContaining(name);
   }
   public Kitchen addKitchen(Kitchen kitchen) {
     return kitchenRepository.save(kitchen);

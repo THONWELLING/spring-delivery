@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,6 +31,16 @@ public class RestaurantService {
     return restaurantRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
+  public List<Restaurant>getRestaurantByDeliveryRate(BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate){
+    return restaurantRepository.findRestaurantByDeliveryRateBetween(lowerDeliveryRate, higherDeliveryRate);
+  }
+
+  public List<Restaurant>getRestaurantByNameAndKitchenId(String name, UUID kitchenId){
+    return restaurantRepository.findRestaurantByNameContainingAndKitchenId(name, kitchenId);
+  }
+  public Optional<Restaurant>findFirstRestaurantByNameContaining(String name){
+    return restaurantRepository.findFirstRestaurantByNameContaining(name);
+  }
   public ResponseEntity<Restaurant> addRestaurant(Restaurant restaurant){
     UUID kitchenId = restaurant.getKitchen().getId();
     Optional<Kitchen> kitchen = kitchenRepository.findById(kitchenId);
