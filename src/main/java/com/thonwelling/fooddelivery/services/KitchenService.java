@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -19,6 +20,10 @@ public class KitchenService {
 
   public ResponseEntity<Kitchen> getKitchenById(@PathVariable UUID id) {
     return kitchenRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  }
+
+  public List<Kitchen> getKitchenByName (String name) {
+    return kitchenRepository.findByName(name);
   }
   public Kitchen addKitchen(Kitchen kitchen) {
     return kitchenRepository.save(kitchen);
