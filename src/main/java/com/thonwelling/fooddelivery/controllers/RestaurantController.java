@@ -44,13 +44,18 @@ public class RestaurantController {
     return restaurantService.getRestaurantByDeliveryRate(lowerDeliveryRate, higherDeliveryRate);
   }
 
-  @GetMapping(value = "/name-and-id", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public List<Restaurant> getRestaurantByNameAndKitchenId(String name, UUID kitchenId){
-    return restaurantService.getRestaurantByNameAndKitchenId(name, kitchenId);
+  @GetMapping(value = "/name-and-id/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public List<Restaurant> findRestaurantByNameContainingAndKitchenId(String name, @PathVariable UUID id){
+    return restaurantService.findRestaurantByNameAndId(name, id);
   }
   @GetMapping(value = "/first-by-name", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public Optional<Restaurant> findFirstRestaurantByNameContaining(String name){
     return restaurantService.findFirstRestaurantByNameContaining(name);
+  }
+
+  @GetMapping("/first")
+  public Optional<Restaurant> getFirstRestaurant() {
+    return restaurantRepository.FindFirst();
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})

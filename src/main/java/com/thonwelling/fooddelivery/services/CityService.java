@@ -41,7 +41,7 @@ public class CityService {
     Optional<State> state = stateRepository.findById(stateId);
 
     if (state.isEmpty()) {
-      throw new NotFoundEntityException("The__City__With__Code__ " + stateId + "__ Does Not E xists!");
+      throw new NotFoundEntityException(String.format("The City With Code " + stateId + " Does Not E xists!"));
     }
     city.setState(state.get());
     return ResponseEntity.status(HttpStatus.CREATED).body(cityRepository.save(city));

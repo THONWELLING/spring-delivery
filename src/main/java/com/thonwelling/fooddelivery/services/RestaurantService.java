@@ -35,8 +35,8 @@ public class RestaurantService {
     return restaurantRepository.findRestaurantByDeliveryRateBetween(lowerDeliveryRate, higherDeliveryRate);
   }
 
-  public List<Restaurant>getRestaurantByNameAndKitchenId(String name, UUID kitchenId){
-    return restaurantRepository.findRestaurantByNameContainingAndKitchenId(name, kitchenId);
+  public List<Restaurant>findRestaurantByNameAndId(String name, UUID id){
+    return restaurantRepository.findRestaurantByNameContainingAndKitchenId(name, id);
   }
   public Optional<Restaurant>findFirstRestaurantByNameContaining(String name){
     return restaurantRepository.findFirstRestaurantByNameContaining(name);
