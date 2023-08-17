@@ -1,6 +1,7 @@
 package com.thonwelling.fooddelivery.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,8 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -26,6 +29,10 @@ public class Kitchen implements Serializable {
   private UUID id;
   @Column(nullable = false)
   private String name;
+
+  @JsonIgnore
+  @OneToMany(mappedBy =  "kitchen")
+  private List<Restaurant> restaurants = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {

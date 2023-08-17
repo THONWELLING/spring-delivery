@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -28,6 +30,10 @@ public class Restaurant implements Serializable {
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JoinColumn(name = "kitchen_id", nullable = false)
   private Kitchen kitchen;
+
+  @OneToMany
+  @JoinTable(name = "restaurants_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
+  private List<PaymentMode> paymentTypes = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {
