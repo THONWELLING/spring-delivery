@@ -1,5 +1,6 @@
 package com.thonwelling.fooddelivery.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +33,7 @@ public class Restaurant implements Serializable {
   private Kitchen kitchen;
 
   @OneToMany
+  @JsonIgnore
   @JoinTable(name = "restaurants_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
   private List<PaymentMode> paymentTypes = new ArrayList<>();
 
