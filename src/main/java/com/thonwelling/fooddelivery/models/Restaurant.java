@@ -32,6 +32,10 @@ public class Restaurant implements Serializable {
   @JoinColumn(name = "kitchen_id", nullable = false)
   private Kitchen kitchen;
 
+  @JsonIgnore
+  @Embedded
+  private Address address;
+
   @OneToMany
   @JsonIgnore
   @JoinTable(name = "restaurants_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
