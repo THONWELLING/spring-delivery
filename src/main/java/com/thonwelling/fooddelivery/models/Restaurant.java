@@ -4,9 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -35,6 +38,17 @@ public class Restaurant implements Serializable {
   @JsonIgnore
   @Embedded
   private Address address;
+
+  @JsonIgnore
+  @CreationTimestamp
+  @Column(nullable = false, columnDefinition = "datetime")
+  private LocalDateTime registrationDate;
+
+  @JsonIgnore
+  @UpdateTimestamp
+  @Column(nullable = false, columnDefinition = "datetime")
+  private LocalDateTime updateDate;
+
 
   @OneToMany
   @JsonIgnore
