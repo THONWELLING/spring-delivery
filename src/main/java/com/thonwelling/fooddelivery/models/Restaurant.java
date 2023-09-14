@@ -54,6 +54,16 @@ public class Restaurant implements Serializable {
   @JsonIgnore
   @JoinTable(name = "restaurants_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
   private List<PaymentMode> paymentTypes = new ArrayList<>();
+/**
+ * Adicionando Produto na entidade Restaurante
+ *
+ * Vamos agora referenciar na nossa entidade Restaurante, a entidade Produto que criamos.
+ * Como 1 Restaurante pode ter vários produtos, o relacionamento aqui é Um para Muitos, ou, ManyToOne.
+ * Adicionamos também a anotação @JsonIgnore, para evitar refêrencia circular, já que esse relacionamento é bi-direcional
+ * */
+  @JsonIgnore
+  @OneToMany(mappedBy = "restaurant")
+  private List<Product>products = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {
