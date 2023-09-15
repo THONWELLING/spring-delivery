@@ -6,6 +6,7 @@ import lombok.*;
 import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.rmi.server.UID;
 import java.util.Objects;
 
 @Entity
@@ -19,7 +20,7 @@ public class Product implements Serializable {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
-  private Long id;
+  private UID id;
   @Column(nullable = false)
   private String name;
   @Column(nullable = false)

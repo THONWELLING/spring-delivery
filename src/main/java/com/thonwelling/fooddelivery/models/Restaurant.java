@@ -31,6 +31,7 @@ public class Restaurant implements Serializable {
   @Column(nullable = false)
   private Double deliveryRate;
 
+  @JsonIgnore
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
   @JoinColumn(name = "kitchen_id", nullable = false)
   private Kitchen kitchen;
