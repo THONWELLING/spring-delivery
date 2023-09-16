@@ -6,6 +6,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -18,20 +20,16 @@ import lombok.*;
  * Por exemplo se tivermos esta classe incorporada na entidade restaurante, a tabela restaurante terão todas essas colunas que aqui são propriedades.
  * @author Thonwelling
  * */
-public class Address {
-  @Column(name = "address_zip-code")
+public class Address implements Serializable {
+
   private String zipCode;
-  @Column(name = "address_street")
   private String street;
-  @Column(name = "address_number")
   private String number;
-  @Column(name = "address_complement")
   private String complement;
-  @Column(name = "address_neighborhood")
   private String neighborhood;
 
   @ManyToOne
-  @JoinColumn(name = "address_city-id")
+  @JoinColumn(name = "address_city_id")
   private City city;
 
 }

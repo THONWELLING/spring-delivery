@@ -2,30 +2,29 @@ package com.thonwelling.fooddelivery.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.rmi.server.UID;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "user")
 public class User implements Serializable {
-  @Serial
-  private static final long serialVersionUID =1L;
-
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UID id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   @Column(nullable = false)
   private String name;
@@ -38,7 +37,7 @@ public class User implements Serializable {
 
   @JsonIgnore
   @CreationTimestamp
-  @Column(nullable = false, columnDefinition = "datetime")
+  @Column(nullable = false)
   private LocalDateTime registrationDate;
 
   @ManyToMany

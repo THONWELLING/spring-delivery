@@ -6,25 +6,22 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.io.Serial;
 import java.io.Serializable;
-import java.rmi.server.UID;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Table(name = "group")
 public class Group implements Serializable {
-  @Serial
-  private static final long serialVersionUID =1L;
-
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  private UID id;
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private UUID id;
 
   @Column(nullable = false)
   private String name;

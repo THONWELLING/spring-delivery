@@ -7,7 +7,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,12 +17,10 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
+@Table(name = "restaurant")
 public class Restaurant implements Serializable {
-  @Serial
-  private static final long serialVersionUID =1L;
-
   @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
   @Column(nullable = false)
   private String name;
@@ -53,7 +50,7 @@ public class Restaurant implements Serializable {
 
   @OneToMany
   @JsonIgnore
-  @JoinTable(name = "restaurants_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
+  @JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
   private List<PaymentMode> paymentTypes = new ArrayList<>();
 /**
  * Adicionando Produto na entidade Restaurante
