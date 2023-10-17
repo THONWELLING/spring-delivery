@@ -24,7 +24,7 @@ public class Kitchen implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
-  @Column(nullable = false)
+  @Column(nullable = false, length = 20)
   private String name;
 
   @JsonIgnore

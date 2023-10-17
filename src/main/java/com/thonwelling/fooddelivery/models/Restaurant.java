@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -22,14 +21,14 @@ public class Restaurant implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
-  @Column(nullable = false)
+  @Column(nullable = false, length = 30)
   private String name;
 
   @Column(nullable = false)
   private Double deliveryRate;
 
   @JsonIgnore
-  @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
   @JoinColumn(name = "kitchen_id", nullable = false)
   private Kitchen kitchen;
 
@@ -38,17 +37,16 @@ public class Restaurant implements Serializable {
   private Address address;
 
   @JsonIgnore
+  @Column(nullable = false)
   @CreationTimestamp
-  @Column(nullable = false, columnDefinition = "datetime")
   private LocalDateTime registrationDate;
 
   @JsonIgnore
-  @UpdateTimestamp
-  @Column(nullable = false, columnDefinition = "datetime")
+  @CreationTimestamp
   private LocalDateTime updateDate;
 
 
-  @OneToMany
+  @ManyToMany
   @JsonIgnore
   @JoinTable(name = "restaurant_payment_mode", joinColumns = @JoinColumn(name = "restaurant_id"), inverseJoinColumns = @JoinColumn(name = "payment_mode_id"))
   private List<PaymentMode> paymentTypes = new ArrayList<>();
@@ -58,6 +56,7 @@ public class Restaurant implements Serializable {
  * Vamos agora referenciar na nossa entidade Restaurante, a entidade Produto que criamos.
  * Como 1 Restaurante pode ter vários produtos, o relacionamento aqui é Um para Muitos, ou, ManyToOne.
  * Adicionamos também a anotação @JsonIgnore, para evitar refêrencia circular, já que esse relacionamento é bi-direcional
+ * @Autor Thonwelling
  * */
   @JsonIgnore
   @OneToMany(mappedBy = "restaurant")

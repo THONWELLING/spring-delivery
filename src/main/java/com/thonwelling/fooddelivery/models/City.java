@@ -21,7 +21,7 @@ public class City implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 30)
   private String name;
 
   @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

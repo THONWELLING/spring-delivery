@@ -1,10 +1,10 @@
 CREATE TABLE restaurant (
-  id UUID NOT NULL,
+   id UUID NOT NULL,
    name VARCHAR(30) NOT NULL,
    delivery_rate DOUBLE PRECISION NOT NULL,
    kitchen_id UUID NOT NULL,
-   registration_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-   update_date TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+   registration_date timestamp not null,
+   update_date timestamp,
    zip_code VARCHAR(8),
    street VARCHAR(60),
    number VARCHAR(6),

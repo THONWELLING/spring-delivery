@@ -1,9 +1,6 @@
 package com.thonwelling.fooddelivery.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
@@ -22,13 +19,18 @@ import java.io.Serializable;
  * */
 public class Address implements Serializable {
 
+  @Column(nullable = false, length = 8)
   private String zipCode;
+  @Column( nullable = false, length = 60)
   private String street;
+  @Column( nullable = false, length = 6)
   private String number;
+  @Column(length = 50)
   private String complement;
+  @Column(length = 25)
   private String neighborhood;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY )
   @JoinColumn(name = "address_city_id")
   private City city;
 

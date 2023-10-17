@@ -1,5 +1,5 @@
 CREATE TABLE city (
-  id UUID NOT NULL,
+   id UUID NOT NULL,
    name VARCHAR(30) NOT NULL,
    state_id UUID NOT NULL,
    CONSTRAINT pk_city PRIMARY KEY (id)

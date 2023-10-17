@@ -17,24 +17,24 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name = "group")
-public class Group implements Serializable {
+@Table(name = "collection")
+public class Collection implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 30)
   private String name;
 
   @ManyToMany
-  @JoinTable(name = "group_permission", joinColumns = @JoinColumn(name = "group_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
+  @JoinTable(name = "collection_permission", joinColumns = @JoinColumn(name = "collection_id"), inverseJoinColumns = @JoinColumn(name = "permission_id"))
   private List<Permission> permissions = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Group group)) return false;
-    return Objects.equals(getId(), group.getId()) && Objects.equals(getName(), group.getName()) && Objects.equals(getPermissions(), group.getPermissions());
+    if (!(o instanceof Collection collection)) return false;
+    return Objects.equals(getId(), collection.getId()) && Objects.equals(getName(), collection.getName()) && Objects.equals(getPermissions(), collection.getPermissions());
   }
 
   @Override

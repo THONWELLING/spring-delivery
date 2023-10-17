@@ -26,23 +26,23 @@ public class User implements Serializable {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID id;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 30)
   private String name;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 100)
   private String email;
 
-  @Column(nullable = false)
+  @Column(nullable = false, length = 15)
   private String password;
 
   @JsonIgnore
-  @CreationTimestamp
   @Column(nullable = false)
+  @CreationTimestamp
   private LocalDateTime registrationDate;
 
   @ManyToMany
-  @JoinTable(name = "user_group", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "group_id"))
-  private List<Group> groups = new ArrayList<>();
+  @JoinTable(name = "user_collection", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "collection_id"))
+  private List<Collection> collections = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {
