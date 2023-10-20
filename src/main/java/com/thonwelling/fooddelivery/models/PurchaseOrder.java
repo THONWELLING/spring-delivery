@@ -21,7 +21,7 @@ import java.util.UUID;
 public class PurchaseOrder {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
-  private UUID orderId;
+  private UUID   orderId;
   private Double subtotal;
   private Double taxDelivery;
   private Double totalValue;

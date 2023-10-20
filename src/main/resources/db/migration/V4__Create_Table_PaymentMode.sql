@@ -1,5 +1,6 @@
 CREATE TABLE payment_mode (
-   id UUID NOT NULL,
+   id          UUID NOT NULL,
    description VARCHAR(255) NOT NULL,
-   CONSTRAINT pk_payment_mode PRIMARY KEY (id)
+
+   CONSTRAINT payment_mode_pk PRIMARY KEY ("id")
 );
