@@ -25,7 +25,7 @@ public class OrderItem {
 
   @ManyToOne
   @JoinColumn(nullable = false)
-  private Order order;
+  private PurchaseOrder purchaseOrder;
 
   @ManyToOne
   @JoinColumn(nullable = false)
@@ -35,11 +35,11 @@ public class OrderItem {
   public boolean equals(Object o) {
     if (this == o) return true;
     if (!(o instanceof OrderItem orderItem)) return false;
-    return Objects.equals(getItemId(), orderItem.getItemId()) && Objects.equals(getUnitPrice(), orderItem.getUnitPrice()) && Objects.equals(getTotalPrice(), orderItem.getTotalPrice()) && Objects.equals(getQuantity(), orderItem.getQuantity()) && Objects.equals(getObservation(), orderItem.getObservation()) && Objects.equals(getOrder(), orderItem.getOrder()) && Objects.equals(getProduct(), orderItem.getProduct());
+    return Objects.equals(getItemId(), orderItem.getItemId()) && Objects.equals(getUnitPrice(), orderItem.getUnitPrice()) && Objects.equals(getTotalPrice(), orderItem.getTotalPrice()) && Objects.equals(getQuantity(), orderItem.getQuantity()) && Objects.equals(getObservation(), orderItem.getObservation()) && Objects.equals(getPurchaseOrder(), orderItem.getPurchaseOrder()) && Objects.equals(getProduct(), orderItem.getProduct());
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getItemId(), getUnitPrice(), getTotalPrice(), getQuantity(), getObservation(), getOrder(), getProduct());
+    return Objects.hash(getItemId(), getUnitPrice(), getTotalPrice(), getQuantity(), getObservation(), getPurchaseOrder(), getProduct());
   }
 }

@@ -18,7 +18,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Order {
+public class PurchaseOrder {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private UUID orderId;
@@ -34,7 +34,6 @@ public class Order {
   @Column(nullable = false)
   @CreationTimestamp
   private LocalDateTime dateCreation;
-
   @CreationTimestamp
   private LocalDateTime dateConfirmation;
   @CreationTimestamp
@@ -54,14 +53,14 @@ public class Order {
   @JoinColumn(name = "user_client_id", nullable = false)
   private User user;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "purchaseOrder")
   private List<OrderItem> items = new ArrayList<>();
 
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Order order)) return false;
-    return Objects.equals(getOrderId(), order.getOrderId()) && Objects.equals(getSubtotal(), order.getSubtotal()) && Objects.equals(getTaxDelivery(), order.getTaxDelivery()) && Objects.equals(getTotalValue(), order.getTotalValue()) && Objects.equals(getDelliveryAddress(), order.getDelliveryAddress()) && getStatus() == order.getStatus() && Objects.equals(getDateCreation(), order.getDateCreation()) && Objects.equals(getDateConfirmation(), order.getDateConfirmation()) && Objects.equals(getCanceledAt(), order.getCanceledAt()) && Objects.equals(getDateDelivered(), order.getDateDelivered());
+    if (!(o instanceof PurchaseOrder purchaseOrder)) return false;
+    return Objects.equals(getOrderId(), purchaseOrder.getOrderId()) && Objects.equals(getSubtotal(), purchaseOrder.getSubtotal()) && Objects.equals(getTaxDelivery(), purchaseOrder.getTaxDelivery()) && Objects.equals(getTotalValue(), purchaseOrder.getTotalValue()) && Objects.equals(getDelliveryAddress(), purchaseOrder.getDelliveryAddress()) && getStatus() == purchaseOrder.getStatus() && Objects.equals(getDateCreation(), purchaseOrder.getDateCreation()) && Objects.equals(getDateConfirmation(), purchaseOrder.getDateConfirmation()) && Objects.equals(getCanceledAt(), purchaseOrder.getCanceledAt()) && Objects.equals(getDateDelivered(), purchaseOrder.getDateDelivered());
   }
 
   @Override
