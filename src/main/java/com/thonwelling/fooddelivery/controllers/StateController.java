@@ -31,40 +31,24 @@ public class StateController {
   }
 
   @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<State> getCityById(@PathVariable UUID id) {
+  public ResponseEntity<State> getStateById(@PathVariable UUID id) {
     return stateService.getStateById(id);
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<?> addCity(@RequestBody State state ) {
-    try{
-      state = stateService.addState(state);
-        return ResponseEntity.status(HttpStatus.CREATED).body(state);
-    } catch (NotFoundEntityException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+  public State addState(@RequestBody State state ) {
+    return stateService.addState(state);
   }
 
   @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<State> updateState(@PathVariable UUID id, @RequestBody State state) {
-    Optional<State> stateOptional = stateRepository.findById(id);
-    if (stateOptional.isPresent()) {
-      State stateFounded = stateOptional.get();
-      BeanUtils.copyProperties(state, stateOptional, "id");
-      return ResponseEntity.ok(stateService.addState(stateFounded));
-    }
-    return ResponseEntity.notFound().build();
+  @ResponseStatus(HttpStatus.OK)
+  public State updateState(@PathVariable UUID id, @RequestBody State state) {
+      return stateService.addState(state);
   }
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> deleteStateById(@PathVariable UUID id) {
-    try{
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteStateById(@PathVariable UUID id) {
         stateService.DeleteState(id);
-        return ResponseEntity.noContent().build();
-    } catch (NotFoundEntityException e) {
-        return ResponseEntity.notFound().build();
-    } catch (InUseEntityException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
   }
 
 }

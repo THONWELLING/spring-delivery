@@ -7,7 +7,6 @@ import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,6 +18,8 @@ import java.util.UUID;
 @Service
 public class KitchenService {
 
+  public static final String KITCHEN_NOT_FOUND = "The kitchen With The Code %s Does Not Exists!!";
+  public static final String KITCHEN_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   KitchenRepository kitchenRepository;
 
@@ -39,9 +40,9 @@ public class KitchenService {
     try{
         kitchenRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e ){
-       throw new NotFoundEntityException(String.format("The kitchen With te Code %s Does Not Exists!!", id));
+       throw new NotFoundEntityException(String.format(KITCHEN_NOT_FOUND, id));
     }catch (DataIntegrityViolationException e) {
-       throw new InUseEntityException(String.format("The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!", id));
+       throw new InUseEntityException(String.format(KITCHEN_IN_USE, id));
     }
   }
 

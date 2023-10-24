@@ -1,7 +1,9 @@
 package com.thonwelling.fooddelivery.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
+import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.services.RestaurantService;
@@ -23,11 +25,18 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/restaurants")
 public class RestaurantController {
+  public static final String RESTAURANT_NOT_FOUND = "The kitchen With The Code %s Does Not Exists!!";
+  public static final String RESTAURANT_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
 
   @Autowired
   RestaurantService restaurantService;
   @Autowired
   RestaurantRepository restaurantRepository;
+  @Autowired
+  private final KitchenRepository kitchenRepository;
+  public RestaurantController(KitchenRepository kitchenRepository) {
+    this.kitchenRepository = kitchenRepository;
+  }
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public ResponseEntity<List<Restaurant>> listRestaurants (){
@@ -59,29 +68,22 @@ public class RestaurantController {
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<?> addRestaurant(@RequestBody Restaurant restaurant) {
-    try {
-      restaurant = restaurantService.addRestaurant(restaurant).getBody();
-      return ResponseEntity.status(HttpStatus.CREATED).body(restaurant);
-
-    } catch (NotFoundEntityException e) {
-      return ResponseEntity.badRequest().body(e.getMessage());
-    }
+  public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
+    UUID KitchenId  = restaurant.getKitchen().getId();
+    Kitchen kitchen = kitchenRepository.findById(KitchenId)
+        .orElseThrow(() -> new NotFoundEntityException(String.format(RESTAURANT_NOT_FOUND, KitchenId)));
+    restaurant.setKitchen(kitchen);
+    return restaurantService.addRestaurant(restaurant);
   }
 
   @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<?> updateRestaurant(@PathVariable UUID id , @RequestBody Optional<Restaurant> restaurant) {
-    try {
-      Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-      if (restaurantOptional.isPresent()) {
-        Restaurant restaurantFounded = restaurantOptional.get();
-        BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
-        return restaurantService.addRestaurant(restaurantFounded);
-      }
-        return ResponseEntity.notFound().build();
-    } catch (NotFoundEntityException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-    }
+  public ResponseEntity<Restaurant> updateRestaurant(@PathVariable UUID id , @RequestBody Restaurant restaurant) {
+      Restaurant restaurantFounded = restaurantService.getRestaurantById(id).getBody();
+        if (restaurantFounded != null) {
+          BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
+          return ResponseEntity.ok(restaurantService.addRestaurant(restaurantFounded));
+        }
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
 
   @PatchMapping("/{id}")
@@ -110,6 +112,7 @@ public class RestaurantController {
     // No loop abaixo, atribuímos os valores dos campos atualizados do restaurantOrigin para o restaurantDestiny
     originFields.forEach((propertyName, propertyValue) -> {
       Field field = ReflectionUtils.findField(Restaurant.class, propertyName);
+      assert field != null;
       field.setAccessible(true);
 
       Object newValue = ReflectionUtils.getField(field, restaurantOrigin);

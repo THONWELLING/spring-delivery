@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.UUID;
@@ -38,7 +39,6 @@ public class KitchenController {
     return repository.findByNameContaining(name);
   }
 
-
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @ResponseStatus(HttpStatus.CREATED)
   public Kitchen addKitchen(@RequestBody Kitchen kitchen) {
@@ -50,21 +50,14 @@ public class KitchenController {
     Kitchen kitchenFounded = service.getKitchenById(id).getBody();
     if (kitchenFounded != null) {
       BeanUtils.copyProperties(kitchen, kitchenFounded, "id");
-
-      return ResponseEntity.ok(service.addKitchen(kitchenFounded));
+        return ResponseEntity.ok(service.addKitchen(kitchenFounded));
     }
     return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<String> deleteKitchen (@PathVariable UUID id){
-    try{
-      service.deleteKitchen(id);
-        return ResponseEntity.noContent().build();
-    } catch (NotFoundEntityException e ){
-        return ResponseEntity.notFound().build();
-    }catch (InUseEntityException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-    }
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteKitchen (@PathVariable UUID id){
+    service.deleteKitchen(id);
   }
 }

@@ -17,6 +17,8 @@ import java.util.UUID;
 @Service
 public class StateService {
 
+  public static final String STATE_NOT_FOUND = "State With code %s Does Not Exists!!";
+  public static final String STATE_IN_USE = "State With code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   StateRepository stateRepository;
 
@@ -36,9 +38,9 @@ public class StateService {
     try {
       stateRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
-        throw new NotFoundEntityException("State With code " + id + " Does Not Exists!");
+        throw new NotFoundEntityException(String.format(STATE_NOT_FOUND, id));
     } catch (DataIntegrityViolationException e) {
-        throw new InUseEntityException("State With code " + id + "Can Not Be Deleted!");
+        throw new InUseEntityException(String.format(STATE_IN_USE, id));
     }
   }
 }

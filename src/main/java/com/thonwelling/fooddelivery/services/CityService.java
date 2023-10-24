@@ -9,7 +9,6 @@ import com.thonwelling.fooddelivery.repositories.StateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,6 +21,8 @@ import java.util.UUID;
 @Service
 public class CityService {
 
+  public static final String CITY_NOT_FOUND = "City With The Code %s Does Not Exists!!";
+  public static final String CITY_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   CityRepository cityRepository;
 
@@ -36,15 +37,12 @@ public class CityService {
     return cityRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
-  public ResponseEntity<City> addCity(City city) {
+  public City addCity(City city) {
     UUID stateId = city.getState().getId();
-    Optional<State> state = stateRepository.findById(stateId);
-
-    if (state.isEmpty()) {
-      throw new NotFoundEntityException(String.format("The City With Code " + stateId + " Does Not E xists!"));
-    }
-    city.setState(state.get());
-    return ResponseEntity.status(HttpStatus.CREATED).body(cityRepository.save(city));
+    State state = stateRepository.findById(stateId)
+        .orElseThrow(() -> new NotFoundEntityException(String.format(CITY_NOT_FOUND, stateId)));
+    city.setState(state);
+    return cityRepository.save(city);
   }
 
   @Transactional
@@ -52,9 +50,9 @@ public class CityService {
     try {
       cityRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
-      throw new NotFoundEntityException("City With code " + id + " Does Not Exists!");
+      throw new NotFoundEntityException(String.format(CITY_NOT_FOUND, id));
     } catch (DataIntegrityViolationException e) {
-      throw new InUseEntityException("City With code " + id + "Can Not Be Deleted!");
+      throw new InUseEntityException(String.format(CITY_IN_USE, id));
     }
   }
 }
