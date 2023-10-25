@@ -22,19 +22,19 @@ public class StateService {
   @Autowired
   StateRepository stateRepository;
 
-  public List<State> listStates() {
+  public List<State> listAllStates() {
     return stateRepository.findAll();
   }
 
-  public ResponseEntity<State> getStateById(@PathVariable UUID id) {
+  public ResponseEntity<State> getOneStateById (@PathVariable UUID id) {
     return stateRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
-  public State addState(State state) {
+  public State addNewState(State state) {
     return stateRepository.save(state);
   }
 
-  public void DeleteState(@PathVariable UUID id) {
+  public void DeleteStateById (@PathVariable UUID id) {
     try {
       stateRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e) {
@@ -43,4 +43,8 @@ public class StateService {
         throw new InUseEntityException(String.format(STATE_IN_USE, id));
     }
   }
+
+
+
+
 }

@@ -17,26 +17,24 @@ import java.util.UUID;
 
 @Service
 public class KitchenService {
-
   public static final String KITCHEN_NOT_FOUND = "The kitchen With The Code %s Does Not Exists!!";
   public static final String KITCHEN_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   KitchenRepository kitchenRepository;
 
-
-  public ResponseEntity<Kitchen> getKitchenById(@PathVariable UUID id) {
+  public ResponseEntity<Kitchen> getOneKitchenById(@PathVariable UUID id) {
     return kitchenRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
-  public List<Kitchen> getKitchenByName (String name) {
+  public List<Kitchen> getOneKitchenByName (String name) {
     return kitchenRepository.findByNameContaining(name);
   }
-  public Kitchen addKitchen(Kitchen kitchen) {
+  public Kitchen addNewKitchen (Kitchen kitchen) {
     return kitchenRepository.save(kitchen);
   }
 
   @Transactional
-  public void deleteKitchen(UUID id) {
+  public void deleteOneKitchenById (UUID id) {
     try{
         kitchenRepository.deleteById(id);
     } catch (EmptyResultDataAccessException e ){
@@ -45,5 +43,8 @@ public class KitchenService {
        throw new InUseEntityException(String.format(KITCHEN_IN_USE, id));
     }
   }
+
+
+
 
 }

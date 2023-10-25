@@ -39,49 +39,49 @@ public class RestaurantController {
   }
 
   @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<List<Restaurant>> listRestaurants (){
-    return ResponseEntity.status(HttpStatus.OK).body(restaurantService.listRestaurants());
+  public ResponseEntity<List<Restaurant>> listAllRestaurants () {
+    return ResponseEntity.status(HttpStatus.OK).body(restaurantService.listAllRestaurants());
   }
 
   @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<Restaurant> getRestaurantById(@PathVariable UUID id){
-    return restaurantService.getRestaurantById(id);
+  public ResponseEntity<Restaurant> getRestaurantById (@PathVariable UUID id) {
+    return restaurantService.getOneRestaurantById(id);
   }
 
   @GetMapping(value = "/deliveryRate", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public List<Restaurant> getRestaurantByDeliveryRate(BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate){
+  public List<Restaurant> getRestaurantByDeliveryRate (BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate) {
     return restaurantService.getRestaurantByDeliveryRate(lowerDeliveryRate, higherDeliveryRate);
   }
 
   @GetMapping(value = "/name-and-id/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public List<Restaurant> findRestaurantByNameContainingAndKitchenId(String name, @PathVariable UUID id){
+  public List<Restaurant> findRestaurantByNameContainingAndKitchenId (String name, @PathVariable UUID id) {
     return restaurantService.findRestaurantByNameAndId(name, id);
   }
   @GetMapping(value = "/first-by-name", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public Optional<Restaurant> findFirstRestaurantByNameContaining(String name){
+  public Optional<Restaurant> findFirstRestaurantByNameContaining (String name) {
     return restaurantService.findFirstRestaurantByNameContaining(name);
   }
 
   @GetMapping("/first")
-  public Optional<Restaurant> getFirstRestaurant() {
+  public Optional<Restaurant> getFirstRestaurant () {
     return restaurantRepository.FindFirst();
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public Restaurant addRestaurant(@RequestBody Restaurant restaurant) {
+  public Restaurant addNewRestaurant (@RequestBody Restaurant restaurant) {
     UUID KitchenId  = restaurant.getKitchen().getId();
     Kitchen kitchen = kitchenRepository.findById(KitchenId)
         .orElseThrow(() -> new NotFoundEntityException(String.format(RESTAURANT_NOT_FOUND, KitchenId)));
     restaurant.setKitchen(kitchen);
-    return restaurantService.addRestaurant(restaurant);
+    return restaurantService.addNewRestaurant(restaurant);
   }
 
   @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<Restaurant> updateRestaurant(@PathVariable UUID id , @RequestBody Restaurant restaurant) {
-      Restaurant restaurantFounded = restaurantService.getRestaurantById(id).getBody();
+  public ResponseEntity<Restaurant> updateOneRestaurantById (@PathVariable UUID id , @RequestBody Restaurant restaurant) {
+      Restaurant restaurantFounded = restaurantService.getOneRestaurantById(id).getBody();
         if (restaurantFounded != null) {
           BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
-          return ResponseEntity.ok(restaurantService.addRestaurant(restaurantFounded));
+          return ResponseEntity.ok(restaurantService.addNewRestaurant(restaurantFounded));
         }
       return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
   }
@@ -119,4 +119,8 @@ public class RestaurantController {
       ReflectionUtils.setField(field, restaurantDestiny, newValue);
     });
   }
+
+
+
+
 }

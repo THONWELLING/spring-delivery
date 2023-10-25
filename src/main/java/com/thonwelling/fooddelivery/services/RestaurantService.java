@@ -23,29 +23,34 @@ public class RestaurantService {
   @Autowired
   KitchenRepository kitchenRepository;
 
-  public List<Restaurant> listRestaurants(){
+  public List<Restaurant> listAllRestaurants (){
     return restaurantRepository.findAll();
   }
 
-  public ResponseEntity<Restaurant>  getRestaurantById(@PathVariable UUID id){
+  public ResponseEntity<Restaurant> getOneRestaurantById (@PathVariable UUID id) {
     return restaurantRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
-  public List<Restaurant>getRestaurantByDeliveryRate(BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate){
+  public List<Restaurant> getRestaurantByDeliveryRate (BigDecimal lowerDeliveryRate, BigDecimal higherDeliveryRate) {
     return restaurantRepository.findRestaurantByDeliveryRateBetween(lowerDeliveryRate, higherDeliveryRate);
   }
 
-  public List<Restaurant>findRestaurantByNameAndId(String name, UUID id){
+  public List<Restaurant> findRestaurantByNameAndId (String name, UUID id) {
     return restaurantRepository.findRestaurantByNameContainingAndKitchenId(name, id);
   }
-  public Optional<Restaurant>findFirstRestaurantByNameContaining(String name){
+  public Optional<Restaurant> findFirstRestaurantByNameContaining (String name) {
     return restaurantRepository.findFirstRestaurantByNameContaining(name);
   }
-  public Restaurant addRestaurant(Restaurant restaurant){
+  public Restaurant addNewRestaurant (Restaurant restaurant) {
     UUID kitchenId = restaurant.getKitchen().getId();
     Kitchen kitchen = kitchenRepository.findById(kitchenId)
         .orElseThrow(() -> new NotFoundEntityException(String.format(KITCHEN_NOT_FOUND, kitchenId)));
     restaurant.setKitchen(kitchen);
     return restaurantRepository.save(restaurant);
   }
+
+
+
+
+
 }
