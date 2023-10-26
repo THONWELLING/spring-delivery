@@ -2,8 +2,10 @@ package com.thonwelling.fooddelivery.services;
 
 import com.thonwelling.fooddelivery.exceptions.InUseEntityException;
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.StateNotFoundException;
 import com.thonwelling.fooddelivery.models.State;
 import com.thonwelling.fooddelivery.repositories.StateRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -17,7 +19,6 @@ import java.util.UUID;
 @Service
 public class StateService {
 
-  public static final String STATE_NOT_FOUND = "State With code %s Does Not Exists!!";
   public static final String STATE_IN_USE = "State With code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   StateRepository stateRepository;
@@ -26,25 +27,28 @@ public class StateService {
     return stateRepository.findAll();
   }
 
-  public ResponseEntity<State> getOneStateById (@PathVariable UUID id) {
-    return stateRepository.findById(id).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
+  public ResponseEntity<State> getOneStateById (@PathVariable UUID stateId) {
+    return stateRepository.findById(stateId).map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
   }
 
   public State addNewState(State state) {
     return stateRepository.save(state);
   }
 
-  public void DeleteStateById (@PathVariable UUID id) {
+  public void DeleteStateById (@PathVariable UUID stateId) {
     try {
-      stateRepository.deleteById(id);
+      stateRepository.deleteById(stateId);
     } catch (EmptyResultDataAccessException e) {
-        throw new NotFoundEntityException(String.format(STATE_NOT_FOUND, id));
+        throw new StateNotFoundException(stateId);
     } catch (DataIntegrityViolationException e) {
-        throw new InUseEntityException(String.format(STATE_IN_USE, id));
+        throw new InUseEntityException(String.format(STATE_IN_USE, stateId));
     }
   }
 
-
+  public State FindStateById (UUID stateId) {
+    return stateRepository.findById(stateId)
+        .orElseThrow(() -> new StateNotFoundException (stateId));
+  }
 
 
 }

@@ -1,12 +1,14 @@
 package com.thonwelling.fooddelivery.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.thonwelling.fooddelivery.exceptions.BusinessException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.services.RestaurantService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,9 +45,9 @@ public class RestaurantController {
     return ResponseEntity.status(HttpStatus.OK).body(restaurantService.listAllRestaurants());
   }
 
-  @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<Restaurant> getRestaurantById (@PathVariable UUID id) {
-    return restaurantService.getOneRestaurantById(id);
+  @GetMapping(value = "/{restaurantId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public Restaurant getRestaurantById (@PathVariable UUID restaurantId) {
+    return restaurantService.findRestaurantById(restaurantId);
   }
 
   @GetMapping(value = "/deliveryRate", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
@@ -68,41 +70,31 @@ public class RestaurantController {
   }
 
   @PostMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  @ResponseStatus(HttpStatus.CREATED)
   public Restaurant addNewRestaurant (@RequestBody Restaurant restaurant) {
-    UUID KitchenId  = restaurant.getKitchen().getId();
-    Kitchen kitchen = kitchenRepository.findById(KitchenId)
-        .orElseThrow(() -> new NotFoundEntityException(String.format(RESTAURANT_NOT_FOUND, KitchenId)));
-    restaurant.setKitchen(kitchen);
-    return restaurantService.addNewRestaurant(restaurant);
-  }
-
-  @PutMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
-  public ResponseEntity<Restaurant> updateOneRestaurantById (@PathVariable UUID id , @RequestBody Restaurant restaurant) {
-      Restaurant restaurantFounded = restaurantService.getOneRestaurantById(id).getBody();
-        if (restaurantFounded != null) {
-          BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
-          return ResponseEntity.ok(restaurantService.addNewRestaurant(restaurantFounded));
-        }
-      return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-  }
-
-  @PatchMapping("/{id}")
-  public ResponseEntity<?> updateRestaurantParcial(@PathVariable UUID id, @RequestBody Map<String, Object> fields) {
-    Optional<Restaurant> restaurantOptional = restaurantRepository.findById(id);
-    if (restaurantOptional.isPresent()) {
-      Restaurant restaurant = restaurantOptional.get();
-
-      merge(fields, restaurant);
-
-      try {
-        Restaurant updatedRestaurant = restaurantRepository.save(restaurant);
-        return ResponseEntity.ok(updatedRestaurant);
-      } catch (NotFoundEntityException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
-      }
-    } else {
-      return ResponseEntity.notFound().build();
+    try {
+      return restaurantService.addNewRestaurant(restaurant);
+    } catch (EntityNotFoundException error) {
+      throw new BusinessException(error.getMessage());
     }
+  }
+
+  @PutMapping(value = "/{restaurantId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
+  public Restaurant updateOneRestaurantById (@PathVariable UUID restaurantId , @RequestBody Restaurant restaurant) {
+      Restaurant restaurantFounded = restaurantService.findRestaurantById(restaurantId);
+          BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
+      try {
+        return restaurantService.addNewRestaurant(restaurantFounded);
+      } catch (EntityNotFoundException error) {
+        throw new BusinessException(error.getMessage());
+      }
+  }
+
+  @PatchMapping("/{restaurantId}")
+  public Restaurant updateRestaurantParcial(@PathVariable UUID restaurantId, @RequestBody Map<String, Object> fields) {
+    Restaurant currentRestaurant = restaurantService.findRestaurantById(restaurantId);
+      merge(fields, currentRestaurant);
+      return updateOneRestaurantById(restaurantId, currentRestaurant);
   }
 
   private void merge(Map<String, Object> originFields, Restaurant restaurantDestiny) {

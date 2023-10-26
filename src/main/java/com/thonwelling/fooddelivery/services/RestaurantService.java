@@ -5,6 +5,7 @@ import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
 import com.thonwelling.fooddelivery.repositories.RestaurantRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,11 +18,13 @@ import java.util.UUID;
 
 @Service
 public class RestaurantService {
-  public static final String KITCHEN_NOT_FOUND = "The Kitchen With Code %s Does Not Exists!!";
+  public static final String RESTAURANT_NOT_FOUND = "The Kitchen With Code %s Does Not Exists!!";
   @Autowired
   RestaurantRepository restaurantRepository;
   @Autowired
   KitchenRepository kitchenRepository;
+  @Autowired
+  KitchenService kitchenService;
 
   public List<Restaurant> listAllRestaurants (){
     return restaurantRepository.findAll();
@@ -43,13 +46,16 @@ public class RestaurantService {
   }
   public Restaurant addNewRestaurant (Restaurant restaurant) {
     UUID kitchenId = restaurant.getKitchen().getId();
-    Kitchen kitchen = kitchenRepository.findById(kitchenId)
-        .orElseThrow(() -> new NotFoundEntityException(String.format(KITCHEN_NOT_FOUND, kitchenId)));
+    Kitchen kitchen = kitchenService.findKitchenById(kitchenId);
     restaurant.setKitchen(kitchen);
     return restaurantRepository.save(restaurant);
   }
 
-
+  public Restaurant findRestaurantById (UUID restaurantId) {
+    return restaurantRepository.findById(restaurantId)
+        .orElseThrow(() -> new EntityNotFoundException(
+            String.format(RESTAURANT_NOT_FOUND, restaurantId)));
+  }
 
 
 

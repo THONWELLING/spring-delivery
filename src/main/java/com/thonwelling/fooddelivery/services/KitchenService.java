@@ -4,6 +4,7 @@ import com.thonwelling.fooddelivery.exceptions.InUseEntityException;
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -44,7 +45,10 @@ public class KitchenService {
     }
   }
 
-
+  public Kitchen findKitchenById (UUID kitchenId) {
+    return kitchenRepository.findById(kitchenId)
+        .orElseThrow(() -> new EntityNotFoundException(String.format(KITCHEN_NOT_FOUND, kitchenId)));
+  }
 
 
 }

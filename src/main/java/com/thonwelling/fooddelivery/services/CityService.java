@@ -5,7 +5,7 @@ import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.models.City;
 import com.thonwelling.fooddelivery.models.State;
 import com.thonwelling.fooddelivery.repositories.CityRepository;
-import com.thonwelling.fooddelivery.repositories.StateRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -24,7 +24,7 @@ public class CityService {
   @Autowired
   CityRepository cityRepository;
   @Autowired
-  StateRepository stateRepository;
+  StateService stateService;
 
   public List<City> listAllCities() {
     return cityRepository.findAll();
@@ -36,24 +36,27 @@ public class CityService {
 
   public City addNewCity(City city) {
     UUID stateId = city.getState().getId();
-    State state = stateRepository.findById(stateId)
-        .orElseThrow(() -> new NotFoundEntityException(String.format(CITY_NOT_FOUND, stateId)));
-    city.setState(state);
-    return cityRepository.save(city);
+    State state = stateService.FindStateById(stateId);
+      city.setState(state);
+        cityRepository.save(city);
+    return city;
   }
 
   @Transactional
-  public void deleteOneCityById (UUID id) {
+  public void deleteOneCityById (UUID cityId) {
     try {
-      cityRepository.deleteById(id);
+      cityRepository.deleteById(cityId);
     } catch (EmptyResultDataAccessException e) {
-      throw new NotFoundEntityException(String.format(CITY_NOT_FOUND, id));
+      throw new NotFoundEntityException(String.format(CITY_NOT_FOUND, cityId));
     } catch (DataIntegrityViolationException e) {
-      throw new InUseEntityException(String.format(CITY_IN_USE, id));
+      throw new InUseEntityException(String.format(CITY_IN_USE, cityId));
     }
   }
 
-
+  public City FindCityById (UUID cityId) {
+    return cityRepository.findById(cityId)
+        .orElseThrow(() -> new EntityNotFoundException(String.format(CITY_NOT_FOUND, cityId)));
+  }
 
 
 }
