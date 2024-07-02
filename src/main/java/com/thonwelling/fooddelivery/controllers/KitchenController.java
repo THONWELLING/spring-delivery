@@ -43,13 +43,10 @@ public class KitchenController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<Kitchen> updateOneKitchenById (@PathVariable UUID id,  @RequestBody Kitchen kitchen) {
-    Kitchen kitchenFounded = service.getOneKitchenById(id).getBody();
-    if (kitchenFounded != null) {
-      BeanUtils.copyProperties(kitchen, kitchenFounded, "id");
-        return ResponseEntity.ok(service.addNewKitchen(kitchenFounded));
-    }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+  public Kitchen updateOneKitchenById (@PathVariable UUID id,  @RequestBody Kitchen kitchen) {
+    Kitchen kitchenFounded = service.findKitchenById(id);
+    BeanUtils.copyProperties(kitchen, kitchenFounded, "id");
+    return service.addNewKitchen(kitchenFounded);
   }
 
   @DeleteMapping("/{id}")

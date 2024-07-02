@@ -7,7 +7,7 @@ import java.io.Serial;
 import java.util.UUID;
 
 @ResponseStatus(value = HttpStatus.NOT_FOUND)
-public class StateNotFoundException extends NotFoundEntityException {
+public class StateNotFoundException extends BusinessException {
   @Serial
   private static final long serialVersionUID = 1L;
   public StateNotFoundException(String message) {
@@ -15,7 +15,6 @@ public class StateNotFoundException extends NotFoundEntityException {
   }
 
   public StateNotFoundException(UUID stateId) {
-    this(String.format("State With code %s Does Not Exists!!", stateId));
-
+    this(String.format("State With Code %s Does Not Exists!!", stateId));
   }
 }

@@ -34,12 +34,13 @@ public class Kitchen implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Kitchen kitchen)) return false;
-    return Objects.equals(getId(), kitchen.getId()) && Objects.equals(getName(), kitchen.getName());
+    if (o == null || getClass() != o.getClass()) return false;
+    Kitchen kitchen = (Kitchen) o;
+    return Objects.equals(id, kitchen.id) && Objects.equals(name, kitchen.name) && Objects.equals(restaurants, kitchen.restaurants);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName());
+    return Objects.hash(id, name, restaurants);
   }
 }

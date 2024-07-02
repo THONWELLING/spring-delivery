@@ -30,12 +30,13 @@ public class City {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof City city)) return false;
-    return Objects.equals(getId(), city.getId()) && Objects.equals(getName(), city.getName()) && Objects.equals(getState(), city.getState());
+    if (o == null || getClass() != o.getClass()) return false;
+    City city = (City) o;
+    return Objects.equals(id, city.id) && Objects.equals(name, city.name) && Objects.equals(state, city.state);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getState());
+    return Objects.hash(id, name, state);
   }
 }

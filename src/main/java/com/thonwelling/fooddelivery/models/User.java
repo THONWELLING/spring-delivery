@@ -20,7 +20,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "user")
+@Table(name = "users_table")
 public class User implements Serializable {
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,12 +47,13 @@ public class User implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof User user)) return false;
-    return Objects.equals(getId(), user.getId()) && Objects.equals(getName(), user.getName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getRegistrationDate(), user.getRegistrationDate());
+    if (o == null || getClass() != o.getClass()) return false;
+    User user = (User) o;
+    return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password) && Objects.equals(registrationDate, user.registrationDate) && Objects.equals(collections, user.collections);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getEmail(), getRegistrationDate());
+    return Objects.hash(id, name, email, password, registrationDate, collections);
   }
 }

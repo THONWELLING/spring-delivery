@@ -33,12 +33,13 @@ public class Collection implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Collection collection)) return false;
-    return Objects.equals(getId(), collection.getId()) && Objects.equals(getName(), collection.getName()) && Objects.equals(getPermissions(), collection.getPermissions());
+    if (o == null || getClass() != o.getClass()) return false;
+    Collection that = (Collection) o;
+    return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(permissions, that.permissions);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getPermissions());
+    return Objects.hash(id, name, permissions);
   }
 }

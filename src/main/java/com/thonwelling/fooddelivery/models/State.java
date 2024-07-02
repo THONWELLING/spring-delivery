@@ -26,12 +26,13 @@ public class State implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof State state)) return false;
-    return Objects.equals(getId(), state.getId()) && Objects.equals(getName(), state.getName());
+    if (o == null || getClass() != o.getClass()) return false;
+    State state = (State) o;
+    return Objects.equals(id, state.id) && Objects.equals(name, state.name);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName());
+    return Objects.hash(id, name);
   }
 }

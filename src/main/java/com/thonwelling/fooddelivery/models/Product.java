@@ -37,12 +37,13 @@ public class Product implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Product product)) return false;
-    return Objects.equals(getId(), product.getId()) && Objects.equals(getName(), product.getName()) && Objects.equals(getDescription(), product.getDescription()) && Objects.equals(getPrice(), product.getPrice()) && Objects.equals(getActive(), product.getActive()) && Objects.equals(getRestaurant(), product.getRestaurant());
+    if (o == null || getClass() != o.getClass()) return false;
+    Product product = (Product) o;
+    return Objects.equals(id, product.id) && Objects.equals(name, product.name) && Objects.equals(description, product.description) && Objects.equals(price, product.price) && Objects.equals(active, product.active) && Objects.equals(restaurant, product.restaurant);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getDescription(), getPrice(), getActive(), getRestaurant());
+    return Objects.hash(id, name, description, price, active, restaurant);
   }
 }

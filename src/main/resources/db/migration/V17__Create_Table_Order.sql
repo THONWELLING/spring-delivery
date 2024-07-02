@@ -1,30 +1,28 @@
 CREATE TABLE purchase_order (
-    order_id uuid not null,
-    subtotal float(53),
-    tax_delivery float(53),
-    total_value float(53),
+    order_id     uuid PRIMARY KEY,
+    subtotal     float(20),
+    tax_delivery float(20),
+    total_value  float(20),
 
-    restaurant_id     UUID not null,
-    user_client_id    UUID not null,
-    payment_mode_id   UUID not null,
-
-    zip_code          varchar(8) not null,
+    restaurant_id     UUID         NOT NULL,
+    user_client_id    UUID         NOT NULL,
+    payment_mode_id   UUID         NOT NULL,
+    zip_code          VARCHAR(8)   NOT NULL,
     address_city_id   UUID,
-    neighborhood      varchar(25),
-    street            varchar(60)  not null,
-    number            varchar(6)   not null,
-    complement        varchar(50),
+    neighborhood      VARCHAR(30),
+    street            VARCHAR(60)  NOT NULL,
+    number            VARCHAR(6)   NOT NULL,
+    complement        VARCHAR(50),
+    status            VARCHAR(20)  NOT NULL,
+    date_creation     TIMESTAMP    NOT NULL,
+    date_confirmation TIMESTAMP,
+    canceled_at       TIMESTAMP,
+    date_delivered    TIMESTAMP,
 
-    status            varchar(10)  not null,
-    date_creation     timestamp(6) not null,
-    date_confirmation timestamp(6),
-    canceled_at       timestamp(6),
-    date_delivered    timestamp(6),
 
-    CONSTRAINT  purchase_order_pk     PRIMARY KEY (order_id),
-    CONSTRAINT  fk_order_address_city FOREIGN KEY ("address_city_id") REFERENCES city ("id"),
-    CONSTRAINT  fk_order_restaurant   FOREIGN KEY ("restaurant_id")   REFERENCES restaurant ("id"),
-    CONSTRAINT  fk_order_user_client  FOREIGN KEY ("user_client_id")  REFERENCES "user" ("id"),
-    CONSTRAINT  fk_order_payment_mode FOREIGN KEY ("payment_mode_id") REFERENCES payment_mode("id")
+    CONSTRAINT  fk_order_address_city FOREIGN KEY (address_city_id) REFERENCES city        (id),
+    CONSTRAINT  fk_order_restaurant   FOREIGN KEY (restaurant_id)   REFERENCES restaurant  (id),
+    CONSTRAINT  fk_order_user_client  FOREIGN KEY (user_client_id)  REFERENCES users_table (id),
+    CONSTRAINT  fk_order_payment_mode FOREIGN KEY (payment_mode_id) REFERENCES payment_mode(id)
 
 );

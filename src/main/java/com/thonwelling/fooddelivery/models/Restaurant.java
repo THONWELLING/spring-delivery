@@ -65,12 +65,13 @@ public class Restaurant implements Serializable {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof Restaurant that)) return false;
-    return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getDeliveryRate(), that.getDeliveryRate());
+    if (o == null || getClass() != o.getClass()) return false;
+    Restaurant that = (Restaurant) o;
+    return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(deliveryRate, that.deliveryRate) && Objects.equals(kitchen, that.kitchen) && Objects.equals(address, that.address) && Objects.equals(registrationDate, that.registrationDate) && Objects.equals(updateDate, that.updateDate) && Objects.equals(paymentTypes, that.paymentTypes) && Objects.equals(products, that.products);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getId(), getName(), getDeliveryRate());
+    return Objects.hash(id, name, deliveryRate, kitchen, address, registrationDate, updateDate, paymentTypes, products);
   }
 }

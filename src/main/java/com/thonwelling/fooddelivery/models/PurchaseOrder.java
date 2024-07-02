@@ -59,12 +59,13 @@ public class PurchaseOrder {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof PurchaseOrder purchaseOrder)) return false;
-    return Objects.equals(getOrderId(), purchaseOrder.getOrderId()) && Objects.equals(getSubtotal(), purchaseOrder.getSubtotal()) && Objects.equals(getTaxDelivery(), purchaseOrder.getTaxDelivery()) && Objects.equals(getTotalValue(), purchaseOrder.getTotalValue()) && Objects.equals(getDelliveryAddress(), purchaseOrder.getDelliveryAddress()) && getStatus() == purchaseOrder.getStatus() && Objects.equals(getDateCreation(), purchaseOrder.getDateCreation()) && Objects.equals(getDateConfirmation(), purchaseOrder.getDateConfirmation()) && Objects.equals(getCanceledAt(), purchaseOrder.getCanceledAt()) && Objects.equals(getDateDelivered(), purchaseOrder.getDateDelivered());
+    if (o == null || getClass() != o.getClass()) return false;
+    PurchaseOrder that = (PurchaseOrder) o;
+    return Objects.equals(orderId, that.orderId) && Objects.equals(subtotal, that.subtotal) && Objects.equals(taxDelivery, that.taxDelivery) && Objects.equals(totalValue, that.totalValue) && Objects.equals(delliveryAddress, that.delliveryAddress) && status == that.status && Objects.equals(dateCreation, that.dateCreation) && Objects.equals(dateConfirmation, that.dateConfirmation) && Objects.equals(canceledAt, that.canceledAt) && Objects.equals(dateDelivered, that.dateDelivered) && Objects.equals(paymentMode, that.paymentMode) && Objects.equals(restaurant, that.restaurant) && Objects.equals(user, that.user) && Objects.equals(items, that.items);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getOrderId(), getSubtotal(), getTaxDelivery(), getTotalValue(), getDelliveryAddress(), getStatus(), getDateCreation(), getDateConfirmation(), getCanceledAt(), getDateDelivered());
+    return Objects.hash(orderId, subtotal, taxDelivery, totalValue, delliveryAddress, status, dateCreation, dateConfirmation, canceledAt, dateDelivered, paymentMode, restaurant, user, items);
   }
 }

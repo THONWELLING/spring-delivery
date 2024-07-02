@@ -38,8 +38,7 @@ public class CityService {
     UUID stateId = city.getState().getId();
     State state = stateService.FindStateById(stateId);
       city.setState(state);
-        cityRepository.save(city);
-    return city;
+      return cityRepository.save(city);
   }
 
   @Transactional

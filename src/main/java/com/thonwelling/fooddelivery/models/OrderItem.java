@@ -34,12 +34,13 @@ public class OrderItem {
   @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (!(o instanceof OrderItem orderItem)) return false;
-    return Objects.equals(getItemId(), orderItem.getItemId()) && Objects.equals(getUnitPrice(), orderItem.getUnitPrice()) && Objects.equals(getTotalPrice(), orderItem.getTotalPrice()) && Objects.equals(getQuantity(), orderItem.getQuantity()) && Objects.equals(getObservation(), orderItem.getObservation()) && Objects.equals(getPurchaseOrder(), orderItem.getPurchaseOrder()) && Objects.equals(getProduct(), orderItem.getProduct());
+    if (o == null || getClass() != o.getClass()) return false;
+    OrderItem orderItem = (OrderItem) o;
+    return Objects.equals(itemId, orderItem.itemId) && Objects.equals(unitPrice, orderItem.unitPrice) && Objects.equals(totalPrice, orderItem.totalPrice) && Objects.equals(quantity, orderItem.quantity) && Objects.equals(observation, orderItem.observation) && Objects.equals(purchaseOrder, orderItem.purchaseOrder) && Objects.equals(product, orderItem.product);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(getItemId(), getUnitPrice(), getTotalPrice(), getQuantity(), getObservation(), getPurchaseOrder(), getProduct());
+    return Objects.hash(itemId, unitPrice, totalPrice, quantity, observation, purchaseOrder, product);
   }
 }
