@@ -1,11 +1,10 @@
 package com.thonwelling.fooddelivery.services;
 
+import com.thonwelling.fooddelivery.exceptions.CityNotFoundException;
 import com.thonwelling.fooddelivery.exceptions.InUseEntityException;
-import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.models.City;
 import com.thonwelling.fooddelivery.models.State;
 import com.thonwelling.fooddelivery.repositories.CityRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -19,8 +18,7 @@ import java.util.UUID;
 
 @Service
 public class CityService {
-  public static final String CITY_NOT_FOUND = "City With The Code %s Does Not Exists!!";
-  public static final String CITY_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
+  public static final String CITY_IN_USE = "The Kitchen With Code %s Can Not Been Deleted. It Is In Use!!";
   @Autowired
   CityRepository cityRepository;
   @Autowired
@@ -46,7 +44,7 @@ public class CityService {
     try {
       cityRepository.deleteById(cityId);
     } catch (EmptyResultDataAccessException e) {
-      throw new NotFoundEntityException(String.format(CITY_NOT_FOUND, cityId));
+      throw new CityNotFoundException(cityId);
     } catch (DataIntegrityViolationException e) {
       throw new InUseEntityException(String.format(CITY_IN_USE, cityId));
     }
@@ -54,7 +52,7 @@ public class CityService {
 
   public City FindCityById (UUID cityId) {
     return cityRepository.findById(cityId)
-        .orElseThrow(() -> new EntityNotFoundException(String.format(CITY_NOT_FOUND, cityId)));
+        .orElseThrow(() -> new CityNotFoundException(cityId));
   }
 
 

@@ -5,7 +5,6 @@ import com.thonwelling.fooddelivery.exceptions.StateNotFoundException;
 import com.thonwelling.fooddelivery.models.City;
 import com.thonwelling.fooddelivery.repositories.CityRepository;
 import com.thonwelling.fooddelivery.services.CityService;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

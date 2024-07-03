@@ -2,6 +2,7 @@ package com.thonwelling.fooddelivery.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thonwelling.fooddelivery.exceptions.BusinessException;
+import com.thonwelling.fooddelivery.exceptions.KitchenNotFoundException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
@@ -74,18 +75,18 @@ public class RestaurantController {
   public Restaurant addNewRestaurant (@RequestBody Restaurant restaurant) {
     try {
       return restaurantService.addNewRestaurant(restaurant);
-    } catch (EntityNotFoundException error) {
+    } catch (KitchenNotFoundException error) {
       throw new BusinessException(error.getMessage());
     }
   }
 
   @PutMapping(value = "/{restaurantId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   public Restaurant updateOneRestaurantById (@PathVariable UUID restaurantId , @RequestBody Restaurant restaurant) {
-      Restaurant restaurantFounded = restaurantService.findRestaurantById(restaurantId);
-          BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
       try {
-        return restaurantService.addNewRestaurant(restaurantFounded);
-      } catch (EntityNotFoundException error) {
+        Restaurant restaurantFounded = restaurantService.findRestaurantById(restaurantId);
+        BeanUtils.copyProperties(restaurant, restaurantFounded, "id", "paymentMode", "address", "registrationDate", "products");
+          return restaurantService.addNewRestaurant(restaurantFounded);
+      } catch (KitchenNotFoundException error) {
         throw new BusinessException(error.getMessage());
       }
   }

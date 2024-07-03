@@ -1,6 +1,7 @@
 package com.thonwelling.fooddelivery.services;
 
 import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.RestaurantNotFoundException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.models.Restaurant;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
@@ -53,8 +54,7 @@ public class RestaurantService {
 
   public Restaurant findRestaurantById (UUID restaurantId) {
     return restaurantRepository.findById(restaurantId)
-        .orElseThrow(() -> new EntityNotFoundException(
-            String.format(RESTAURANT_NOT_FOUND, restaurantId)));
+        .orElseThrow(() -> new RestaurantNotFoundException(restaurantId));
   }
 
 

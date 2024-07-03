@@ -1,10 +1,9 @@
 package com.thonwelling.fooddelivery.services;
 
 import com.thonwelling.fooddelivery.exceptions.InUseEntityException;
-import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
+import com.thonwelling.fooddelivery.exceptions.KitchenNotFoundException;
 import com.thonwelling.fooddelivery.models.Kitchen;
 import com.thonwelling.fooddelivery.repositories.KitchenRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -18,7 +17,6 @@ import java.util.UUID;
 
 @Service
 public class KitchenService {
-  public static final String KITCHEN_NOT_FOUND = "The kitchen With The Code %s Does Not Exists!!";
   public static final String KITCHEN_IN_USE = "The Kitchen With Code %s Can Not Been Deteted. It Is In Use!!";
   @Autowired
   KitchenRepository kitchenRepository;
@@ -35,19 +33,19 @@ public class KitchenService {
   }
 
   @Transactional
-  public void deleteOneKitchenById (UUID id) {
+  public void deleteOneKitchenById (UUID kitchenId) {
     try{
-        kitchenRepository.deleteById(id);
+        kitchenRepository.deleteById(kitchenId);
     } catch (EmptyResultDataAccessException e ){
-       throw new NotFoundEntityException(String.format(KITCHEN_NOT_FOUND, id));
+       throw new KitchenNotFoundException(kitchenId);
     }catch (DataIntegrityViolationException e) {
-       throw new InUseEntityException(String.format(KITCHEN_IN_USE, id));
+       throw new InUseEntityException(String.format(KITCHEN_IN_USE, kitchenId));
     }
   }
 
   public Kitchen findKitchenById (UUID kitchenId) {
     return kitchenRepository.findById(kitchenId)
-        .orElseThrow(() -> new EntityNotFoundException(String.format(KITCHEN_NOT_FOUND, kitchenId)));
+        .orElseThrow(() -> new KitchenNotFoundException(kitchenId));
   }
 
 
