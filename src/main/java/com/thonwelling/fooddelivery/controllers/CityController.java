@@ -1,6 +1,8 @@
 package com.thonwelling.fooddelivery.controllers;
 
+import com.thonwelling.fooddelivery.exceptionHandler.ApiError;
 import com.thonwelling.fooddelivery.exceptions.BusinessException;
+import com.thonwelling.fooddelivery.exceptions.NotFoundEntityException;
 import com.thonwelling.fooddelivery.exceptions.StateNotFoundException;
 import com.thonwelling.fooddelivery.models.City;
 import com.thonwelling.fooddelivery.repositories.CityRepository;
@@ -12,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,10 +49,11 @@ public class CityController {
   @PutMapping(value = "/{cityId}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
   @ResponseStatus(HttpStatus.OK)
   public City updateOneCityById (@PathVariable UUID cityId , @RequestBody City city) {
-      City currentCity = cityService.FindCityById(cityId);
-      BeanUtils.copyProperties(city, currentCity, "id");
       try {
-        return cityService.addNewCity(currentCity);
+        City currentCity = cityService.FindCityById(cityId);
+        BeanUtils.copyProperties(city, currentCity, "id");
+         return cityService.addNewCity(currentCity);
+
       } catch (StateNotFoundException error) {
         throw new BusinessException(error.getMessage(), error);
       }
@@ -61,7 +65,22 @@ public class CityController {
     cityRepository.deleteById(cityId);
   }
 
+  @ExceptionHandler(NotFoundEntityException.class)
+  public ResponseEntity<?> handleNotFoundEntityException(NotFoundEntityException notFoundEntityException){
+    ApiError apiError = ApiError.builder()
+            .dateTime(LocalDateTime.now())
+            .message(notFoundEntityException.getMessage())
+            .build();
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body(apiError);
+  }
 
-
+  @ExceptionHandler(BusinessException.class)
+  public ResponseEntity<?> handleBusinessException(BusinessException businessException){
+    ApiError apiError = ApiError.builder()
+            .dateTime(LocalDateTime.now())
+            .message(businessException.getMessage())
+            .build();
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiError);
+  }
 
 }
